@@ -20,11 +20,9 @@ HRGenius is a full-stack Human Resource Management System built as an advanced a
 - Bootstrap
 
 ### Database
-
 - Oracle Database
 
 ### Planned Features
-
 - Authentication and Authorization
 - Role-Based Access Control
 - Employee Management
