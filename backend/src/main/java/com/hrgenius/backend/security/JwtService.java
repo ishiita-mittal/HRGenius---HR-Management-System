@@ -1,4 +1,4 @@
-package com.hrgenius.backend.service;
+package com.hrgenius.backend.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -12,7 +12,7 @@ import java.util.Date;
 public class JwtService {
 
     private final String secretKey =
-            "HRGeniusSecretKeyForJWTAuthentication2026";
+            "HRGeniusSuperSecretKeyForJWTAuthentication2026";
 
     private final long expirationTime = 1000 * 60 * 60;
 
@@ -25,13 +25,25 @@ public class JwtService {
     public String generateToken(String username) {
 
         Date now = new Date();
-        Date expiry = new Date(now.getTime() + expirationTime);
+        Date expiration = new Date(
+                now.getTime() + expirationTime
+        );
 
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(now)
-                .expiration(expiry)
+                .expiration(expiration)
                 .signWith(getSigningKey())
                 .compact();
+    }
+
+    public String extractUsername(String token) {
+
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 }

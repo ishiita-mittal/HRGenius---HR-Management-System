@@ -3,6 +3,7 @@ package com.hrgenius.backend.controller;
 import com.hrgenius.backend.dto.LoginRequest;
 import com.hrgenius.backend.dto.RegisterRequest;
 import com.hrgenius.backend.entity.User;
+import com.hrgenius.backend.security.JwtService;
 import com.hrgenius.backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +14,14 @@ import java.util.Map;
 public class AuthController {
 
     private final UserService userService;
+    private final JwtService jwtService;
 
-    public AuthController(UserService userService) {
+    public AuthController(
+            UserService userService,
+            JwtService jwtService) {
+
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/register")
@@ -49,9 +55,14 @@ public class AuthController {
             );
         }
 
+        String token = jwtService.generateToken(
+                request.getUsername()
+        );
+
         return Map.of(
                 "message", "Login successful",
-                "username", request.getUsername()
+                "username", request.getUsername(),
+                "token", token
         );
     }
 }
